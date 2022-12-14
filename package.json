@@ -1,0 +1,39 @@
+{
+  "name": "ar_indoor_nav_admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "12.11.1"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "echo\"Error : no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.2",
+    "config": "3.3.1",
+    "connect-mongo": "^4.6.0",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.4",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15",
+    "passport": "^0.5.2",
+    "serve": "^13.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.1"
+  }
+}
