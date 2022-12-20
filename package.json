@@ -28,8 +28,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
     "passport": "^0.5.2",
-    "serve": "^13.0.2",
-    "shared_preferences": "^2.0.15"
+    "serve": "^13.0.2"
   },
   "devDependencies": {
     "eslint": "^8.12.0",
