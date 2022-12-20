@@ -13,11 +13,9 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
   try {
     const loggedInUser = await User.findById(req.userId);
     if (loggedInUser.mainManager !== true) {
-      return res
-        .status(401)
-        .json({
-          message: "Unauthorized: Only main managers can add new bldg managers",
-        });
+      return res.status(401).json({
+        message: "Unauthorized: Only main managers can add new bldg managers",
+      });
     }
 
     const { name, email, password } = req.body;
@@ -75,7 +73,7 @@ router.post("/login", async (req, res) => {
     // }
   } catch (e) {
     console.log(e);
-    res.status(500).send('Please try again , "Can not Login"');
+    res.status(500).send('Please try again , "Could not Login"');
   }
 });
 
