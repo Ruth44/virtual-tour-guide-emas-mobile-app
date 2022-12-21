@@ -14,11 +14,11 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
     const loggedInUser = await User.findById(req.userId);
     if (loggedInUser.mainManager !== true) {
       return res.status(401).json({
-        message: "Unauthorized: Only main managers can add new bldg managers",
+        message: "Unauthorized: Only main managers can add new museum managers",
       });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, buildingId } = req.body;
     var similarEmailUser = await User.findOne({ email });
     if (similarEmailUser) {
       return res
@@ -30,21 +30,24 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
       name,
       email,
       password,
+      buildingId,
       mainManager: false,
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
 
-    var blgdList = await Building.find();
-    for (let i = 0; i < blgdList.length; i++) {
-      currBldg = blgdList[i];
-      if (currBldg.managers.includes(loggedInUser._id)) {
-        currBldg.managers.push(user._id);
-        await currBldg.save();
-        break;
-      }
-    }
+    var currBldg = await Building.findOne({ buildingId: buildingId });
+    // for (let i = 0; i < blgdList.length; i++) {
+    //   currBldg = blgdList[buildingId];
+
+    // if (!currBldg.managers.includes(loggedInUser._id)) {
+    //   console.log(currBldg.managers);
+    currBldg.managers.push(user._id);
+    await currBldg.save();
+    // break;
+    //   }
+    // }
     // await blgdList.save();
     res.status(200).json({ success: true });
   } catch (e) {
@@ -68,6 +71,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: "24h",
     });
+    const mainManager = user.mainManager;
     res.status(200).json({ auth: true, token, mainManager });
 
     // }

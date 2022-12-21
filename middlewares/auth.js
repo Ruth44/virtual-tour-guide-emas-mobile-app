@@ -1,6 +1,7 @@
 require('express')
 const jwt = require('jsonwebtoken')
 const config = require('../config');
+const User = require("../models/userModel");
 
 const isAuthenticated = async(req, res, next) => {
     try {

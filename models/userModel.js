@@ -10,6 +10,7 @@ const UserSchema = new Schema({
         unique: true,
     }, 
     password:String,
+    buildingId: String,
     mainManager: Boolean
 });
 
