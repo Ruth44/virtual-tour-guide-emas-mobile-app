@@ -60,7 +60,7 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    await User.remove({ _id: req.params.id });
+    await User.deleteOne({ _id: req.params.id });
     res.json({
       status: "success",
       code: 200,

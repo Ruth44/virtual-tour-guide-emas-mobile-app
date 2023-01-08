@@ -11,7 +11,8 @@ let buildingSchema = mongoose.Schema({
     default: Date.now,
   },
   rooms: {
-    type: [String],
+    type: [roomSchema.RoomSchema],
+    
     default: [],
   },
   managers: {

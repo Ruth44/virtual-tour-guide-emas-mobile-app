@@ -35,10 +35,11 @@ router.post("/", authMiddleware.isAuthenticated, async (req, res, next) => {
     // console.log("bbb");
     const decoded = jwt.verify(token, config.secret);
     // const user = await User.findById(decoded.id)
-
+    console.log(req.body);
     // var fetchedBuilding = await Building.findById(req.body.bldgId).lean();
-    var fetchedBuilding = await Building.findOne({ name: req.body.bldgName });
+    var fetchedBuilding = await Building.findOne({ _id: req.body.building });
     var temp = fetchedBuilding.toObject();
+    console.log("fetchedbldg", fetchedBuilding);
     // console.log({"temp ": temp});
     fetchedBuilding = temp;
     const allowedBldgManagers = fetchedBuilding.managers;
@@ -50,12 +51,10 @@ router.post("/", authMiddleware.isAuthenticated, async (req, res, next) => {
         message: "Insufficient permission for user.",
         error: true,
       });
-    } else {
-      // console.log("ww");
     }
 
     var fetchedCategory = await Category.findOne({
-      name: req.body.categoryName,
+      name: req.body.category,
     });
     const resCategory = fetchedCategory["_id"];
 
@@ -64,6 +63,9 @@ router.post("/", authMiddleware.isAuthenticated, async (req, res, next) => {
       roomNumber: req.body.roomNumber,
       floorNumber: req.body.floorNumber,
       isEmpty: req.body.isEmpty,
+      x: req.body.x,
+      y: req.body.y,
+      z: req.body.z,
       category: resCategory,
       building: fetchedBuilding,
     });
@@ -73,11 +75,11 @@ router.post("/", authMiddleware.isAuthenticated, async (req, res, next) => {
     //   currBldg = blgdList[buildingId];
 
     // if (!currBldg.managers.includes(loggedInUser._id)) {
-        var fetchedBuilding = await Building.findOne({ name: req.body.bldgName });
+    var fetchedBuilding = await Building.findOne({ _id: req.body.building });
 
-    console.log(room._id);
-    fetchedBuilding.rooms.push(room.id);
-    console.log(fetchedBuilding.rooms);
+    console.log(room);
+    fetchedBuilding.rooms.push(room);
+    // console.log(fetchedBuilding.rooms);
     await fetchedBuilding.save();
     res.json({
       status: "success",
@@ -124,14 +126,16 @@ router.put("/:id", async (req, res, next) => {
     fetchedRoom.roomName = req.body.roomName;
     fetchedRoom.isEmpty = req.body.isEmpty;
     returnedData.isEmpty = req.body.isEmpty;
-    if (req.body.isEmpty) {
-      fetchedRoom.roomName = "NO NAME";
-      returnedData.roomName = "NO NAME";
-    }
-    if (req.body.categoryName) {
+    console.log("bodydataa", req.body);
+    // if (req.body.isEmpty) {
+    //   fetchedRoom.roomName = "NO NAME";
+    //   returnedData.roomName = "NO NAME";
+    // }
+    if (req.body.category) {
       var fetchedCategory = await Category.findOne({
-        name: req.body.categoryName,
+        name: req.body.category,
       });
+      console.log(fetchedCategory);
       fetchedRoom.category = fetchedCategory._id;
       returnedData.category = fetchedCategory;
     } else {
@@ -141,17 +145,17 @@ router.put("/:id", async (req, res, next) => {
         createdAt: Date.now(),
       };
     }
-    if (req.body.bldgName) {
-      var fetchedBuilding = await Building.findOne({ name: req.body.bldgName });
-      fetchedRoom.building = fetchedBuilding._id;
-      returnedData.building = fetchedBuilding;
-    } else {
-      returnedData.building = {
-        name: "NO BUILDING",
-        _id: "NOid",
-        createdAt: Date.now(),
-      };
-    }
+    // if (req.body.bldgName) {
+    //   var fetchedBuilding = await Building.findOne({ name: req.body.bldgName });
+    //   fetchedRoom.building = fetchedBuilding._id;
+    //   returnedData.building = fetchedBuilding;
+    // } else {
+    //   returnedData.building = {
+    //     name: "NO BUILDING",
+    //     _id: "NOid",
+    //     createdAt: Date.now(),
+    //   };
+    // }
     await fetchedRoom.save();
     res.json({
       status: "success",
@@ -170,13 +174,23 @@ router.put("/:id", async (req, res, next) => {
 });
 
 router.delete("/:id", async (req, res, next) => {
+  console.log(req.params.id);
   try {
+    var roomToDelete = await Rooms.findById(req.params.id);
+    console.log("j", roomToDelete);
+    var fetchedBuilding = await Building.findById(roomToDelete.building);
+
+    fetchedBuilding.rooms.pop(roomToDelete);
+    await fetchedBuilding.save();
+
     await Rooms.deleteOne({ _id: req.params.id });
     res.json({
       status: "success",
       code: 200,
       message: "Room is Removed",
     });
+
+    // console.log(fetchedBuilding.rooms);
   } catch (e) {
     // next(e);
     res.status(500).json({

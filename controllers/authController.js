@@ -36,8 +36,9 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
-
+    console.log(buildingId);
     var currBldg = await Building.findOne({ buildingId: buildingId });
+    console.log(currBldg);
     // for (let i = 0; i < blgdList.length; i++) {
     //   currBldg = blgdList[buildingId];
 
@@ -60,7 +61,8 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email.toLowerCase() });
-    // console.log({userfetched: user});
+
+    console.log({ userfetched: user });
     if (!user) {
       return res.status(404).send("User does not exist");
     }
@@ -72,7 +74,9 @@ router.post("/login", async (req, res) => {
       expiresIn: "24h",
     });
     const mainManager = user.mainManager;
-    res.status(200).json({ auth: true, token, mainManager });
+    const bldg = user.buildingId;
+    console.log(user);
+    res.status(200).json({ auth: true, token, mainManager, buildingId: bldg });
 
     // }
   } catch (e) {

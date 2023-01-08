@@ -8,6 +8,9 @@ const RoomSchema = new mongoose.Schema({
   },
   floorNumber: String,
   isEmpty: Boolean,
+  x: Number,
+  y:Number,
+  z:Number,
   createdAt: {
     type: Date,
     default: Date.now,
