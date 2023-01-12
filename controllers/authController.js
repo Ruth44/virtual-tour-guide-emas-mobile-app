@@ -66,19 +66,24 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res.status(404).send("User does not exist");
     }
-    // const validPassword = await bcrypt.compare(req.body.password, user.password);
-    // if (!validPassword) {
-    //     return res.status(401).send({ auth: false, token })
-    // } else {
-    const token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: "24h",
-    });
-    const mainManager = user.mainManager;
-    const bldg = user.buildingId;
-    console.log(user);
-    res.status(200).json({ auth: true, token, mainManager, buildingId: bldg });
-
-    // }
+    var validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (user.mainManager == true) {
+      validPassword = req.body.password === user.password ? true : false;
+  
+    }
+    if (!validPassword) {
+      return res.status(401).send({ auth: false, token });
+    } else {
+      const token = jwt.sign({ id: user._id }, config.secret, {
+        expiresIn: "24h",
+      });
+      const mainManager = user.mainManager;
+      const bldg = user.buildingId;
+      console.log(user);
+      res
+        .status(200)
+        .json({ auth: true, token, mainManager, buildingId: bldg });
+    }
   } catch (e) {
     console.log(e);
     res.status(500).send('Please try again , "Could not Login"');

@@ -6,6 +6,7 @@ authMiddleware = require("../middlewares/auth");
 var ObjectId = require("mongoose").Types.ObjectId;
 var categoryRouter = require("./categoriesController");
 
+// Get all the available museums from the database
 router.get("/", async (req, res, next) => {
   try {
     var bldgListRes = await Building.find({});

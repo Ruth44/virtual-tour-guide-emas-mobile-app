@@ -1,5 +1,6 @@
 let mongoose = require("mongoose");
-
+// This is a schema class that helps us to model the data we will store in the database. 
+//The fields for the Room table along with their Data Type is listed inside of this class.
 const RoomSchema = new mongoose.Schema({
   roomName: String,
   roomNumber: {
@@ -18,20 +19,17 @@ const RoomSchema = new mongoose.Schema({
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Categories",
-    // required: true
+
   },
   building: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Buildings",
-    // required: true
+
   },
-  //   bldgId: String,
+
 });
 
-// let rooms = module.exports = mongoose.model('Room', RoomSchema);
-// module.exports.get = function(callback ,limit){
-//     rooms.find(callback).limit(limit);
-// }
+
 let room = mongoose.model("Room", RoomSchema);
 module.exports.RoomModel = room;
 module.exports.RoomSchema = RoomSchema;

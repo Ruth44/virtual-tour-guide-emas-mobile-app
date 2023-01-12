@@ -7,6 +7,9 @@ Building = require("../models/buildingsModel").BuildingModel;
 const jwt = require("jsonwebtoken");
 const config = require("../config");
 
+
+// Get all the available rooms from the database
+
 router.get("/", async (req, res, next) => {
   try {
     const bldgId = req.body.bldgId;
@@ -27,7 +30,7 @@ router.get("/", async (req, res, next) => {
     });
   }
 });
-
+// Create a new room(destination)
 router.post("/", authMiddleware.isAuthenticated, async (req, res, next) => {
   try {
     // console.log({"aaa": req.headers.authorization.split(' ')[1]});
@@ -98,6 +101,8 @@ router.post("/", authMiddleware.isAuthenticated, async (req, res, next) => {
   }
 });
 
+// Get a specific room(destinations) from the database
+
 router.get("/:id", async (req, res, next) => {
   try {
     var fetchedRoom = await Rooms.findById(req.params.id);
@@ -118,6 +123,7 @@ router.get("/:id", async (req, res, next) => {
     });
   }
 });
+// Update a specific room(destination) on the database
 
 router.put("/:id", async (req, res, next) => {
   try {
@@ -172,6 +178,7 @@ router.put("/:id", async (req, res, next) => {
     });
   }
 });
+// Delete a specific room(destinations) from the database
 
 router.delete("/:id", async (req, res, next) => {
   console.log(req.params.id);
