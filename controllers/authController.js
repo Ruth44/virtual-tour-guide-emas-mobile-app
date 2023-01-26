@@ -19,6 +19,9 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
     }
 
     const { name, email, password, buildingId } = req.body;
+    var bldgToAdd = await Building.findOne({ name: buildingId });
+    var bldgIdtoAdd = bldgToAdd._id;
+    console.log("Name:", buildingId, "  ID: " + bldgIdtoAdd);
     var similarEmailUser = await User.findOne({ email });
     if (similarEmailUser) {
       return res
@@ -30,14 +33,15 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
       name,
       email,
       password,
-      buildingId,
+      buildingId: bldgIdtoAdd,
+      
       mainManager: false,
     });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
     console.log(buildingId);
-    var currBldg = await Building.findOne({ buildingId: buildingId });
+    var currBldg = await Building.findOne({ name: buildingId });
     console.log(currBldg);
     // for (let i = 0; i < blgdList.length; i++) {
     //   currBldg = blgdList[buildingId];
@@ -69,7 +73,6 @@ router.post("/login", async (req, res) => {
     var validPassword = await bcrypt.compare(req.body.password, user.password);
     if (user.mainManager == true) {
       validPassword = req.body.password === user.password ? true : false;
-  
     }
     if (!validPassword) {
       return res.status(401).send({ auth: false, token });
