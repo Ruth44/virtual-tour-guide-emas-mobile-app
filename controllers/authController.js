@@ -89,7 +89,7 @@ router.post("/login", async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    res.status(500).send('Please try again , "Could not Login"');
+    res.status(500).send('Please try again , "Could not Login"' + e);
   }
 });
 
