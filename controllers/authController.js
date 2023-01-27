@@ -34,7 +34,7 @@ router.post("/signup", authMiddleware.isAuthenticated, async (req, res) => {
       email,
       password,
       buildingId: bldgIdtoAdd,
-      
+
       mainManager: false,
     });
     const salt = await bcrypt.genSalt(10);
@@ -71,9 +71,9 @@ router.post("/login", async (req, res) => {
       return res.status(404).send("User does not exist");
     }
     var validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (user.mainManager == true) {
-      validPassword = req.body.password === user.password ? true : false;
-    }
+    // if (user.mainManager == true) {
+    //   validPassword = req.body.password === user.password ? true : false;
+    // }
     if (!validPassword) {
       return res.status(401).send({ auth: false, token });
     } else {
